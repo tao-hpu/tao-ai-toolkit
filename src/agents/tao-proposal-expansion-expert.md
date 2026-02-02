@@ -1,5 +1,5 @@
 ---
-name: proposal-expansion-expert
+name: tao-proposal-expansion-expert
 description: 申报书扩写专家，将简要要点扩展为详实、专业的完整段落，适用于政府项目申报文档。
 model: inherit
 ---

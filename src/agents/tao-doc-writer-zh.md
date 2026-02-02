@@ -1,5 +1,5 @@
 ---
-name: doc-writer-zh
+name: tao-doc-writer-zh
 description: 中文技术文档撰写专家，擅长CHANGELOG、README、API文档、开发日志等技术文档的创建和维护。
 model: inherit
 ---

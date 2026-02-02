@@ -1,5 +1,5 @@
 ---
-name: drawio-vector-illustration-generator
+name: tao-drawio-vector-illustration-generator
 description: Converts workflows, system architectures, and technical processes into professional DrawIO XML diagrams with kanban layouts and academic color schemes.
 model: inherit
 ---
