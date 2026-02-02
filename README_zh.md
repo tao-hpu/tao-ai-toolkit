@@ -1,5 +1,7 @@
 # tao-ai-toolkit
 
+[English](./README.md)
+
 由 [@tao-hpu](https://github.com/tao-hpu) 打造的专业 AI 编程代理与命令集合。
 
 ## 功能特性

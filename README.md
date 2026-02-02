@@ -1,5 +1,7 @@
 # tao-ai-toolkit
 
+[中文文档](./README_zh.md)
+
 A collection of specialized AI coding agents and commands by [@tao-hpu](https://github.com/tao-hpu).
 
 ## Features
