@@ -26,7 +26,7 @@ A collection of specialized AI coding agents and commands by [@tao-hpu](https://
 ### Quick Install (Claude Code)
 
 ```bash
-git clone https://github.com/pplmx/tao-ai-toolkit.git
+git clone https://github.com/tao-hpu/tao-ai-toolkit.git
 cd tao-ai-toolkit
 ./install.sh
 ```
@@ -42,7 +42,7 @@ ln -sf /path/to/tao-ai-toolkit/src/agents/*.md ~/.claude/agents/
 ### One-liner
 
 ```bash
-git clone https://github.com/pplmx/tao-ai-toolkit.git ~/.tao-ai-toolkit && ~/.tao-ai-toolkit/install.sh --claude
+git clone https://github.com/tao-hpu/tao-ai-toolkit.git ~/.tao-ai-toolkit && ~/.tao-ai-toolkit/install.sh --claude
 ```
 
 ## Usage
