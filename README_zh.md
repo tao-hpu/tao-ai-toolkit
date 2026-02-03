@@ -15,6 +15,7 @@
 | `tao-drawio-vector-illustration-generator` | DrawIO 图表生成器，用于工作流和架构图 |
 | `tao-md-editor-master` | Markdown 表格与文档编辑专家 |
 | `tao-proposal-expansion-expert` | 申报书扩写专家，将简要要点扩展为详细段落 |
+| `tao-corporate-site-audit` | 企业官网质量审计，检查 SEO、可访问性、性能 |
 
 ### 命令 (Commands)
 
@@ -101,6 +102,7 @@ rm ~/.claude/commands/tao-*.md
 tao-ai-toolkit/
 ├── src/
 │   ├── agents/                                    # 子代理定义
+│   │   ├── tao-corporate-site-audit.md
 │   │   ├── tao-doc-writer-zh.md
 │   │   ├── tao-drawio-vector-illustration-generator.md
 │   │   ├── tao-md-editor-master.md

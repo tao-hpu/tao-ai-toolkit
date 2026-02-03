@@ -15,6 +15,7 @@ A collection of specialized AI coding agents and commands by [@tao-hpu](https://
 | `tao-drawio-vector-illustration-generator` | DrawIO diagram generator for workflows and architectures |
 | `tao-md-editor-master` | Markdown table and document editor |
 | `tao-proposal-expansion-expert` | Expands brief points into detailed proposal paragraphs |
+| `tao-corporate-site-audit` | Corporate website quality auditor for SEO, a11y, performance |
 
 ### Commands
 
@@ -101,6 +102,7 @@ rm ~/.claude/commands/tao-*.md
 tao-ai-toolkit/
 ├── src/
 │   ├── agents/                                    # Sub-agent definitions
+│   │   ├── tao-corporate-site-audit.md
 │   │   ├── tao-doc-writer-zh.md
 │   │   ├── tao-drawio-vector-illustration-generator.md
 │   │   ├── tao-md-editor-master.md
