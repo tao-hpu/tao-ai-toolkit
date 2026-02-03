@@ -99,7 +99,73 @@ grep -rn "<img" app/ components/ --include="*.tsx" --include="*.jsx"
 - [ ] 使用 `next/font` 或 Google Fonts with `display: "swap"`
 - [ ] 字体子集优化
 
-### 6. 代码质量
+### 6. Core Web Vitals
+
+**LCP（Largest Contentful Paint）**
+- [ ] 首屏大图使用 `priority` 预加载
+- [ ] 避免首屏使用懒加载组件
+- [ ] 关键 CSS 内联或预加载
+
+**CLS（Cumulative Layout Shift）**
+- [ ] 图片设置明确的 `width` 和 `height`
+- [ ] 字体使用 `font-display: swap` 或 `optional`
+- [ ] 动态内容有占位符（skeleton）
+
+**INP（Interaction to Next Paint）**
+- [ ] 避免主线程长任务阻塞
+- [ ] 事件处理器轻量化
+
+### 7. 国际化 (i18n)
+
+- [ ] `<html lang="zh-CN">` 或对应语言代码
+- [ ] 多语言站点有 `hreflang` 标签
+- [ ] 日期、货币格式本地化
+
+### 8. 安全配置
+
+**Security Headers**
+- [ ] `next.config.js` 配置安全头
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+- [ ] CSP（Content Security Policy）配置
+
+**敏感信息检查**
+- [ ] 无 API Key 硬编码在客户端代码
+- [ ] 环境变量使用 `NEXT_PUBLIC_` 前缀区分
+- [ ] `.env` 文件在 `.gitignore` 中
+
+检查命令：
+```bash
+grep -rn "sk-\|api_key\|apiKey\|secret" app/ components/ --include="*.tsx" --include="*.ts"
+```
+
+### 9. 错误页面
+
+- [ ] 自定义 `app/not-found.tsx`（404 页面）
+- [ ] 自定义 `app/error.tsx`（错误边界）
+- [ ] 错误页面有返回首页链接
+- [ ] 错误页面风格与主站一致
+
+### 10. 分析与监控
+
+- [ ] Google Analytics 或百度统计集成
+- [ ] 使用 `next/script` 异步加载
+- [ ] 性能监控（Vercel Analytics / Web Vitals 上报）
+
+### 11. 社交分享预览
+
+**og:image 检查**
+- [ ] 图片 URL 是绝对路径
+- [ ] 图片尺寸 1200x630（推荐）
+- [ ] 图片可公开访问（非需认证）
+
+验证工具：
+- Facebook: https://developers.facebook.com/tools/debug/
+- Twitter: https://cards-dev.twitter.com/validator
+- LinkedIn: https://www.linkedin.com/post-inspector/
+
+### 12. 代码质量
 
 **TypeScript**
 - [ ] 无 `any` 类型滥用
@@ -135,11 +201,33 @@ grep -rn "<img" app/ components/ --include="*.tsx" --include="*.jsx"
 5. **检查表单组件**
    - 读取包含 `<form` 或 `onSubmit` 的文件
 
-6. **运行构建验证**
+6. **检查安全配置**
+   - 读取 `next.config.js` 或 `next.config.ts`
+   - 检查 security headers 配置
    ```bash
-   pnpm tsc --noEmit
-   pnpm build
+   grep -rn "sk-\|api_key\|apiKey\|secret" app/ components/ lib/ --include="*.tsx" --include="*.ts"
    ```
+
+7. **检查错误页面**
+   - 读取 `app/not-found.tsx`
+   - 读取 `app/error.tsx`
+
+8. **检查国际化**
+   - 读取 `app/layout.tsx` 检查 `<html lang=>`
+   ```bash
+   grep -rn "hreflang" app/ --include="*.tsx"
+   ```
+
+9. **检查分析脚本**
+   ```bash
+   grep -rn "gtag\|analytics\|baidu" app/ components/ --include="*.tsx"
+   ```
+
+10. **运行构建验证**
+    ```bash
+    pnpm tsc --noEmit
+    pnpm build
+    ```
 
 ## 输出格式
 
@@ -160,6 +248,11 @@ grep -rn "<img" app/ components/ --include="*.tsx" --include="*.jsx"
 | 可访问性 | X/Y | Z | 🔴/🟡/🟢 |
 | 表单 | X/Y | Z | 🔴/🟡/🟢 |
 | 性能 | X/Y | Z | 🔴/🟡/🟢 |
+| Core Web Vitals | X/Y | Z | 🔴/🟡/🟢 |
+| 国际化 | X/Y | Z | 🔴/🟡/🟢 |
+| 安全 | X/Y | Z | 🔴/🟡/🟢 |
+| 错误页面 | X/Y | Z | 🔴/🟡/🟢 |
+| 社交分享 | X/Y | Z | 🔴/🟡/🟢 |
 
 ## 问题清单
 
