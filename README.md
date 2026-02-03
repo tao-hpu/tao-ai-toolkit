@@ -100,11 +100,20 @@ rm ~/.claude/commands/tao-*.md
 ```
 tao-ai-toolkit/
 ├── src/
-│   ├── agents/          # Sub-agent definitions
+│   ├── agents/                                    # Sub-agent definitions
+│   │   ├── tao-doc-writer-zh.md
+│   │   ├── tao-drawio-vector-illustration-generator.md
+│   │   ├── tao-md-editor-master.md
+│   │   ├── tao-proposal-expansion-expert.md
 │   │   └── tao-react-motion.md
-│   └── commands/        # Slash commands
-├── install.sh           # Installation script
-└── README.md
+│   └── commands/                                  # Slash commands
+│       ├── tao-paper-analysis.md
+│       └── tao-paper-review.md
+├── .gitignore
+├── CLAUDE.md
+├── install.sh                                     # Installation script
+├── README.md
+└── README_zh.md
 ```
 
 ## Contributing
