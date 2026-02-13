@@ -242,7 +242,21 @@ tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch
 ### 调用时执行
 
 1. **接收合同文档**
-   - 读取合同文件（.docx, .pdf等）
+   - **读取 .docx 文件**：
+     ```bash
+     # 方法1：使用 textutil 转换为文本（推荐，适合 macOS）
+     textutil -convert txt -stdout "合同文件.docx" > 合同文件.txt
+     # 然后使用 Read 工具读取 .txt 文件
+
+     # 方法2：解压 .docx 获取 XML 内容（跨平台）
+     unzip -p "合同文件.docx" word/document.xml > document.xml
+     # 然后使用 Read 工具读取 document.xml
+     ```
+   - **读取 .pdf 文件**：
+     ```bash
+     # 使用 Read 工具直接读取（支持 PDF）
+     # 或使用 pdftotext 命令转换
+     ```
    - 识别合同类型和性质
    - 确认审核重点和深度
 
