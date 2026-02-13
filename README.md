@@ -16,6 +16,7 @@ A collection of specialized AI coding agents and commands by [@tao-hpu](https://
 | `tao-md-editor-master` | Markdown table and document editor |
 | `tao-proposal-expansion-expert` | Expands brief points into detailed proposal paragraphs |
 | `tao-corporate-site-audit` | Corporate website quality auditor for SEO, a11y, performance |
+| `tao-contract-review-specialist` | Professional contract review expert for legal documents |
 
 ### Commands
 
@@ -102,6 +103,7 @@ rm ~/.claude/commands/tao-*.md
 tao-ai-toolkit/
 ├── src/
 │   ├── agents/                                    # Sub-agent definitions
+│   │   ├── tao-contract-review-specialist.md
 │   │   ├── tao-corporate-site-audit.md
 │   │   ├── tao-doc-writer-zh.md
 │   │   ├── tao-drawio-vector-illustration-generator.md

@@ -16,6 +16,7 @@
 | `tao-md-editor-master` | Markdown 表格与文档编辑专家 |
 | `tao-proposal-expansion-expert` | 申报书扩写专家，将简要要点扩展为详细段落 |
 | `tao-corporate-site-audit` | 企业官网质量审计，检查 SEO、可访问性、性能 |
+| `tao-contract-review-specialist` | 专业合同审核专家，支持各类法律文件审查 |
 
 ### 命令 (Commands)
 
@@ -102,6 +103,7 @@ rm ~/.claude/commands/tao-*.md
 tao-ai-toolkit/
 ├── src/
 │   ├── agents/                                    # 子代理定义
+│   │   ├── tao-contract-review-specialist.md
 │   │   ├── tao-corporate-site-audit.md
 │   │   ├── tao-doc-writer-zh.md
 │   │   ├── tao-drawio-vector-illustration-generator.md
