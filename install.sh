@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # tao-ai-toolkit installer
-# Symlinks agents and commands to your AI coding tool's config directory
+# Symlinks agents, skills, and commands to your AI coding tool's config directory
 
 set -e
 
@@ -49,11 +49,11 @@ install_claude() {
     echo -e "${BLUE}Installing for Claude Code...${NC}"
 
     local claude_agents="$HOME/.claude/agents"
-    local claude_commands="$HOME/.claude/commands"
+    local claude_skills="$HOME/.claude/skills"
 
-    mkdir -p "$claude_agents" "$claude_commands"
+    mkdir -p "$claude_agents" "$claude_skills"
 
-    # Link agents
+    # Link agents (single .md files)
     for file in "$SCRIPT_DIR/src/agents"/*.md; do
         if [ -f "$file" ]; then
             local filename=$(basename "$file")
@@ -68,18 +68,20 @@ install_claude() {
         fi
     done
 
-    # Link commands
-    for file in "$SCRIPT_DIR/src/commands"/*.md; do
-        if [ -f "$file" ]; then
-            local filename=$(basename "$file")
-            local target="$claude_commands/$filename"
+    # Link skills (directories containing SKILL.md)
+    for skill_dir in "$SCRIPT_DIR/src/skills"/*/; do
+        if [ -d "$skill_dir" ] && [ -f "$skill_dir/SKILL.md" ]; then
+            local dirname=$(basename "$skill_dir")
+            local target="$claude_skills/$dirname"
 
             if [ -L "$target" ]; then
                 rm "$target"
+            elif [ -d "$target" ]; then
+                rm -rf "$target"
             fi
 
-            ln -sf "$file" "$target"
-            echo -e "  ${GREEN}✓${NC} Linked command: $filename"
+            ln -sf "$skill_dir" "$target"
+            echo -e "  ${GREEN}✓${NC} Linked skill: $dirname"
         fi
     done
 
@@ -93,19 +95,33 @@ install_cursor() {
     local cursor_rules="$HOME/.cursor/rules"
     mkdir -p "$cursor_rules"
 
-    # Convert and link agents as rules
+    # Link agents as rules
     for file in "$SCRIPT_DIR/src/agents"/*.md; do
         if [ -f "$file" ]; then
             local filename=$(basename "$file" .md)
             local target="$cursor_rules/${filename}.mdc"
 
-            # Copy content (Cursor uses similar markdown format)
             if [ -L "$target" ]; then
                 rm "$target"
             fi
 
             ln -sf "$file" "$target"
             echo -e "  ${GREEN}✓${NC} Linked rule: ${filename}.mdc"
+        fi
+    done
+
+    # Link skills SKILL.md as rules
+    for skill_dir in "$SCRIPT_DIR/src/skills"/*/; do
+        if [ -d "$skill_dir" ] && [ -f "$skill_dir/SKILL.md" ]; then
+            local dirname=$(basename "$skill_dir")
+            local target="$cursor_rules/${dirname}.mdc"
+
+            if [ -L "$target" ]; then
+                rm "$target"
+            fi
+
+            ln -sf "$skill_dir/SKILL.md" "$target"
+            echo -e "  ${GREEN}✓${NC} Linked rule (skill): ${dirname}.mdc"
         fi
     done
 
@@ -119,17 +135,26 @@ install_windsurf() {
     local windsurf_rules="$HOME/.windsurf"
     mkdir -p "$windsurf_rules"
 
-    # Windsurf uses .windsurfrules file
     local rules_file="$windsurf_rules/.windsurfrules"
 
     echo "# tao-ai-toolkit rules" > "$rules_file"
     echo "# Auto-generated - do not edit manually" >> "$rules_file"
     echo "" >> "$rules_file"
 
+    # Include agents
     for file in "$SCRIPT_DIR/src/agents"/*.md; do
         if [ -f "$file" ]; then
-            # Extract content without YAML frontmatter
             sed '1{/^---$/!q;};1,/^---$/d' "$file" >> "$rules_file"
+            echo "" >> "$rules_file"
+            echo "---" >> "$rules_file"
+            echo "" >> "$rules_file"
+        fi
+    done
+
+    # Include skills
+    for skill_dir in "$SCRIPT_DIR/src/skills"/*/; do
+        if [ -d "$skill_dir" ] && [ -f "$skill_dir/SKILL.md" ]; then
+            sed '1{/^---$/!q;};1,/^---$/d' "$skill_dir/SKILL.md" >> "$rules_file"
             echo "" >> "$rules_file"
             echo "---" >> "$rules_file"
             echo "" >> "$rules_file"
@@ -164,6 +189,13 @@ install_copilot() {
         fi
     done
 
+    for skill_dir in "$SCRIPT_DIR/src/skills"/*/; do
+        if [ -d "$skill_dir" ] && [ -f "$skill_dir/SKILL.md" ]; then
+            sed '1{/^---$/!q;};1,/^---$/d' "$skill_dir/SKILL.md" >> "$instructions_file"
+            echo "" >> "$instructions_file"
+        fi
+    done
+
     echo -e "  ${GREEN}✓${NC} Created copilot-instructions.md"
     echo -e "${GREEN}GitHub Copilot installation complete!${NC}"
 }
@@ -172,18 +204,27 @@ install_copilot() {
 uninstall() {
     echo -e "${YELLOW}Uninstalling tao-ai-toolkit...${NC}"
 
-    # Claude Code
+    # Claude Code - agents
     for file in "$HOME/.claude/agents"/tao-*.md; do
         if [ -L "$file" ]; then
             rm "$file"
-            echo -e "  ${GREEN}✓${NC} Removed: $(basename $file)"
+            echo -e "  ${GREEN}✓${NC} Removed agent: $(basename $file)"
         fi
     done
 
+    # Claude Code - skills
+    for dir in "$HOME/.claude/skills"/tao-*/; do
+        if [ -L "${dir%/}" ]; then
+            rm "${dir%/}"
+            echo -e "  ${GREEN}✓${NC} Removed skill: $(basename ${dir%/})"
+        fi
+    done
+
+    # Claude Code - legacy commands
     for file in "$HOME/.claude/commands"/tao-*.md; do
         if [ -L "$file" ]; then
             rm "$file"
-            echo -e "  ${GREEN}✓${NC} Removed: $(basename $file)"
+            echo -e "  ${GREEN}✓${NC} Removed command: $(basename $file)"
         fi
     done
 
@@ -191,7 +232,7 @@ uninstall() {
     for file in "$HOME/.cursor/rules"/tao-*.mdc; do
         if [ -L "$file" ]; then
             rm "$file"
-            echo -e "  ${GREEN}✓${NC} Removed: $(basename $file)"
+            echo -e "  ${GREEN}✓${NC} Removed rule: $(basename $file)"
         fi
     done
 

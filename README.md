@@ -1,29 +1,41 @@
 # tao-ai-toolkit
 
-[中文文档](./README_zh.md)
-
-A collection of specialized AI coding agents and commands by [@tao-hpu](https://github.com/tao-hpu).
+A collection of specialized AI coding agents and skills by [@tao-hpu](https://github.com/tao-hpu).
 
 ## Features
 
-### Agents
+### Agents (Independent Context)
+
+Heavy-duty specialists that run in isolated sub-contexts via the Task tool. Best for tasks that generate large outputs or require autonomous exploration.
 
 | Agent | Description |
 |-------|-------------|
 | `tao-react-motion` | SVG illustration & animation specialist using Framer Motion |
-| `tao-doc-writer-zh` | Chinese technical documentation writer |
 | `tao-drawio-vector-illustration-generator` | DrawIO diagram generator for workflows and architectures |
 | `tao-md-editor-master` | Markdown table and document editor |
-| `tao-proposal-expansion-expert` | Expands brief points into detailed proposal paragraphs |
 | `tao-corporate-site-audit` | Corporate website quality auditor for SEO, a11y, performance |
-| `tao-contract-review-specialist` | Professional contract review expert for legal documents |
 
-### Commands
+### Skills (Interactive + Auto-invocable)
 
-| Command | Description |
-|---------|-------------|
+Interactive specialists that run in the main conversation. Supports `/slash-command` invocation and automatic Claude invocation.
+
+| Skill | Description |
+|-------|-------------|
+| `tao-credit-card-analyzer` | Credit card statement analysis: categorization + trends + budgeting |
+| `tao-contract-review-specialist` | Professional contract review for legal documents |
+| `tao-doc-writer-zh` | Chinese technical documentation writer |
+| `tao-proposal-expansion-expert` | Expands brief points into detailed proposal paragraphs |
 | `tao-paper-analysis` | Academic paper layout and format checker |
 | `tao-paper-review` | Deep paper review with quality assessment |
+
+### When to Use What
+
+| Scenario | Use |
+|----------|-----|
+| Large output (SVG, DrawIO XML, full audit) | **Agent** - keeps main context clean |
+| Need mid-task interaction with user | **Skill** - runs in conversation |
+| Want `/slash-command` quick access | **Skill** - supports `/name` |
+| Parallel independent tasks | **Agent** - can run multiple simultaneously |
 
 ## Installation
 
@@ -37,10 +49,14 @@ cd tao-ai-toolkit
 
 ### Manual Install
 
-Symlink agents to your Claude Code config:
-
 ```bash
+# Agents
 ln -sf /path/to/tao-ai-toolkit/src/agents/*.md ~/.claude/agents/
+
+# Skills (symlink each directory)
+for skill in /path/to/tao-ai-toolkit/src/skills/*/; do
+    ln -sf "$skill" ~/.claude/skills/$(basename "$skill")
+done
 ```
 
 ### One-liner
@@ -51,28 +67,32 @@ git clone https://github.com/tao-hpu/tao-ai-toolkit.git ~/.tao-ai-toolkit && ~/.
 
 ## Usage
 
-### Claude Code
-
-Once installed, the agents are available as sub-agents:
+### Agents (via Task tool or natural language)
 
 ```
 Launch tao-react-motion agent to create a RAG system illustration
 ```
 
-Or use the Task tool directly:
+### Skills (via slash command or natural language)
 
 ```
-Task tool with subagent_type="tao-react-motion"
+/tao-credit-card-analyzer
+Analyze /path/to/credit-card-statement.pdf
+```
+
+```
+/tao-paper-review
+https://arxiv.org/abs/2401.12345
 ```
 
 ## Supported Tools
 
 | Tool | Status | Config Location |
 |------|--------|-----------------|
-| Claude Code | ✅ Full support | `~/.claude/agents/` |
-| Cursor | 🔜 Planned | `~/.cursor/rules/` |
-| Windsurf | 🔜 Planned | `~/.windsurfrules` |
-| GitHub Copilot | 🔜 Planned | `.github/copilot-instructions.md` |
+| Claude Code | Full support | `~/.claude/agents/` + `~/.claude/skills/` |
+| Cursor | Planned | `~/.cursor/rules/` |
+| Windsurf | Planned | `~/.windsurfrules` |
+| GitHub Copilot | Planned | `.github/copilot-instructions.md` |
 
 ## Update
 
@@ -94,7 +114,7 @@ Or manually remove symlinks:
 
 ```bash
 rm ~/.claude/agents/tao-*.md
-rm ~/.claude/commands/tao-*.md
+rm -rf ~/.claude/skills/tao-*
 ```
 
 ## Structure
@@ -102,30 +122,36 @@ rm ~/.claude/commands/tao-*.md
 ```
 tao-ai-toolkit/
 ├── src/
-│   ├── agents/                                    # Sub-agent definitions
-│   │   ├── tao-contract-review-specialist.md
+│   ├── agents/                                    # Sub-agents (isolated context)
 │   │   ├── tao-corporate-site-audit.md
-│   │   ├── tao-doc-writer-zh.md
 │   │   ├── tao-drawio-vector-illustration-generator.md
 │   │   ├── tao-md-editor-master.md
-│   │   ├── tao-proposal-expansion-expert.md
 │   │   └── tao-react-motion.md
-│   └── commands/                                  # Slash commands
-│       ├── tao-paper-analysis.md
-│       └── tao-paper-review.md
+│   └── skills/                                    # Skills (interactive, /slash-command)
+│       ├── tao-contract-review-specialist/
+│       │   └── SKILL.md
+│       ├── tao-credit-card-analyzer/
+│       │   └── SKILL.md
+│       ├── tao-doc-writer-zh/
+│       │   └── SKILL.md
+│       ├── tao-paper-analysis/
+│       │   └── SKILL.md
+│       ├── tao-paper-review/
+│       │   └── SKILL.md
+│       └── tao-proposal-expansion-expert/
+│           └── SKILL.md
 ├── .gitignore
 ├── CLAUDE.md
-├── install.sh                                     # Installation script
-├── README.md
-└── README_zh.md
+├── install.sh
+└── README.md
 ```
 
 ## Contributing
 
-Contributions welcome! Please follow the naming convention:
+Contributions welcome! Follow the naming convention:
 
-- Agents: `tao-{name}.md`
-- Commands: `tao-{name}.md`
+- Agents: `src/agents/tao-{name}.md`
+- Skills: `src/skills/tao-{name}/SKILL.md`
 
 ## License
 
