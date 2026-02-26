@@ -1,7 +1,7 @@
 ---
 name: tao-credit-card-analyzer
 description: 信用卡账单深度分析：消费分类 + 趋势洞察 + 预算建议
-allowed-tools: Read, Glob, Bash
+allowed-tools: Read, Write, Glob, Bash
 ---
 
 # 信用卡账单分析专家
@@ -187,3 +187,64 @@ allowed-tools: Read, Glob, Bash
 - 如有分类不确定的交易，放入「其他/待确认」并说明原因
 - 语言简洁直白，像朋友聊天一样，不要理财顾问的套话
 - 重点突出「花了多少」「花在哪」「哪里可以省」
+
+---
+
+## PDF 导出（可选）
+
+分析完成后，**询问用户是否需要导出 PDF 报告**。不要默认生成，等用户确认。
+
+提示语示例：
+> 分析完成！需要导出一份 PDF 报告到当前目录吗？
+
+### 导出流程
+
+当用户选择导出时：
+
+1. **生成 HTML 文件**：在当前目录创建 `信用卡账单分析_YYYY年MM月.html`，包含完整分析内容和内联 CSS 样式
+2. **转换为 PDF**：使用以下命令转换（按优先级尝试）：
+   - `wkhtmltopdf --encoding utf-8 --enable-local-file-access "<html文件>" "<pdf文件>"`
+   - 如果 wkhtmltopdf 不可用，尝试 `python3 -c "from weasyprint import HTML; HTML('<html文件>').write_pdf('<pdf文件>')"`
+   - 如果都不可用，保留 HTML 文件并告知用户可用浏览器打印为 PDF
+3. **清理**：PDF 生成成功后删除中间 HTML 文件
+4. **输出文件命名**：`信用卡账单分析_YYYY年MM月.pdf`，多月对比时用 `信用卡账单对比_MM-MM月.pdf`
+
+### HTML 样式要求
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 20mm 15mm; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: #1a1a1a; line-height: 1.6; font-size: 13px; }
+  h1 { text-align: center; color: #1a1a1a; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; font-size: 22px; }
+  h2 { color: #2c3e50; border-left: 4px solid #e74c3c; padding-left: 10px; margin-top: 25px; font-size: 16px; }
+  h3 { color: #34495e; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  th { background: #f8f9fa; color: #2c3e50; padding: 8px 10px; text-align: left; border-bottom: 2px solid #dee2e6; }
+  td { padding: 6px 10px; border-bottom: 1px solid #eee; }
+  tr:hover { background: #f8f9fa; }
+  .overview-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; padding: 20px; margin: 15px 0; }
+  .overview-box .label { opacity: 0.85; font-size: 12px; }
+  .overview-box .value { font-size: 20px; font-weight: bold; }
+  .insight { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 15px; margin: 8px 0; border-radius: 0 6px 6px 0; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 4px; }
+  .tag-food { background: #ffe0b2; color: #e65100; }
+  .tag-shop { background: #e1bee7; color: #6a1b9a; }
+  .tag-transport { background: #b3e5fc; color: #01579b; }
+  .tag-digital { background: #c8e6c9; color: #1b5e20; }
+  .tag-other { background: #f5f5f5; color: #616161; }
+  .amount-positive { color: #e74c3c; }
+  .amount-negative { color: #27ae60; }
+  .footer { text-align: center; color: #999; font-size: 11px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; }
+</style>
+</head>
+```
+
+- 将分析的各个章节（概览、分类汇总、关键指标、大额消费、外币消费、洞察）全部渲染为对应的 HTML 结构
+- 概览部分使用 `.overview-box` 卡片样式，用 grid 布局展示关键数字
+- 洞察部分使用 `.insight` 样式
+- 金额正数用 `.amount-positive`，负数用 `.amount-negative`
+- 页脚添加生成时间：`由 tao-credit-card-analyzer 生成于 YYYY-MM-DD`
